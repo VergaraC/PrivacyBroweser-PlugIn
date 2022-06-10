@@ -1,0 +1,26 @@
+{
+
+    "manifest_version": 2,
+    "name": "Privacy Browser",
+    "version": "1.0",
+  
+    "description": "Checks cookies and local storage used by the website your using",
+
+    "permissions": [
+        "http://*/*",
+        "https://*/*"
+      ],
+  
+    "icons": {
+        "48": "icons/border-48.png"      
+    },
+  
+    "content_scripts": [
+      {
+        "matches": ["*://*.mozilla.org/*"],
+        "js": ["privacyBrowser.js"]
+      }
+    ]
+  
+  }
+  
