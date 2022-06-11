@@ -1,0 +1,53 @@
+function getTab(){
+    return browser.tabs.query({
+      currentWindow: true, active: true
+    });
+  }
+  
+
+const getSessionStorage = async (tabs) => {
+    let length = 0;
+    let tab = tabs.pop();
+    var sessionStorageList = document.getElementById('session-storage-list');
+    var size = document.getElementById('size-session-storage');
+  
+
+  const response = await browser.tabs.sendMessage(tab.id, { 
+    method: "sessionStorageData" 
+  });
+
+  var webSec = document.getElementById('session-storage-security-status');
+  var sStorageSec = document.getElementById('session-storage-status');
+
+  if (response.data.length > 0){
+        for (let sessionStorageItem of response.data) {
+            if (sessionStorageItem){
+                length++;
+                let li = document.createElement("li");
+                let item = document.createTextNode(sessionStorageItem);
+                li.appendChild(item);
+                sessionStorageList.appendChild(li);
+            }
+        }
+    let sizeSS = document.createTextNode("Items on Session Storage: " + length);
+    size.appendChild(sizeSS);
+
+    if(length > 20){ 
+        webSec.style.color = "red";
+        sStorageSec.setAttribute("value", "20");
+    }else if(length > 10 && length < 20){
+        webSec.style.color = "red";
+        sStorageSec.setAttribute("value", length.toString());
+    }else{
+        sStorageSec.setAttribute("value", length.toString());
+    }
+  } else {
+        let noSSTag = document.createElement("h5");
+        let noSSData = document.createTextNode("Session storage isn't used in this tab.");
+
+        noSSTag.appendChild(noSSData);
+        sessionStorageList.appendChild(noSSTag);
+  }
+}
+  
+getTab().then(getSessionStorage);

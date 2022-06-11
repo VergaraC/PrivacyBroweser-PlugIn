@@ -4,47 +4,48 @@ function getTab() {
     });
 }
  
-const showAllLocalStorage = async (tabs) => {
+const getLocalStorage = async (tabs) => {
+    let length = 0;
     let tab = tabs.pop();
-    var listHTML = document.getElementById('local-storage-list');
-    var sizeHTML = document.getElementById('size-local-storage');
-    let localStorageLength = 0;
+    var localStorageList = document.getElementById('local-storage-list');
+    var size = document.getElementById('size-local-storage');
+
   
-    const response = await browser.tabs.sendMessage(tab.id, { method: "localStorageData" })
+    const response = await browser.tabs.sendMessage(tab.id, {method: "localStorageData"})
   
-    var websiteSecurity = document.getElementById('website-security-status');
-    var localStorageSecurity = document.getElementById('local-storage-status');
+    var webSec = document.getElementById('website-security-status');
+    var lStorageSec = document.getElementById('local-storage-status');
   
-    if (response.data.length > 0) {
-      for (let localStorageItem of response.data) {
-        if (localStorageItem) {
-          localStorageLength++;
-          let li = document.createElement("li");
-          let content = document.createTextNode(localStorageItem);
-          li.appendChild(content);
-          listHTML.appendChild(li);
+    if (response.data.length > 0){
+        for (let localStorageItem of response.data){
+            if (localStorageItem){
+                let li = document.createElement("li");
+                let item = document.createTextNode(localStorageItem);
+                li.appendChild(item);
+                localStorageList.appendChild(li);
+                length++;
+            }
         }
-      }
-      let sizeContent = document.createTextNode("Number of items on Local Storage: " + localStorageLength);
-      sizeHTML.appendChild(sizeContent);
+      let sizeLS = document.createTextNode("Items on Local Storage: " + length);
+      size.appendChild(sizeLS);
       
-      if(localStorageLength > 10){
-        websiteSecurity.innerHTML = "Website is Insecure";
-        websiteSecurity.style.color = "red";
-        localStorageSecurity.style.color = "red";
-        localStorageSecurity.setAttribute("value", "10");
-      } else {
-        localStorageSecurity.setAttribute("value", "100");
+      if(length > 10){
+          webSec.innerHTML = "Website uses a lot of local storage";
+          webSec.style.color = "red";
+          lStorageSec.style.color = "red";
+          lStorageSec.setAttribute("value", "10");
+      } else{
+          lStorageSec.setAttribute("value", "100");
       }
   
-    } else {
-      let noLocalStorageTag = document.createElement("h4");
-      let noLocalStorageData = document.createTextNode("No local storage data in this tab.");
-  
-      noLocalStorageTag.appendChild(noLocalStorageData);
-      listHTML.appendChild(noLocalStorageTag);
-      localStorageSecurity.setAttribute("value", "100");
+    }else {
+          let noLSTag = document.createElement("h5");
+          let noLSData = document.createTextNode("Local storage isn't used in this tab.");
+      
+          noLSTag.appendChild(noLSData);
+          localStorageList.appendChild(noLSTag);
+          lStorageSec.setAttribute("value", "100");
     }
-  }
+}
       
-  getTab().then(showAllLocalStorage);
+  getTab().then(getLocalStorage);
