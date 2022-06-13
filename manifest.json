@@ -1,12 +1,21 @@
 {
+  "manifest_version": 2,
+  "name": "Privacy Browser",
+  "version": "1.0",
 
-    "manifest_version": 2,
-    "name": "Privacy Browser",
-    "version": "1.0",
-  
+  "browser_action": {
+      "browser_style": true,
+      "default_title": "TecHack - Browser Extension",
+      "default_popup": "main.html"
+  },
+
     "description": "Checks cookies and local storage used by the website your using",
 
     "permissions": [
+        "cookies",
+        "<all_urls>",
+        "tabs",
+        "storage",
         "http://*/*",
         "https://*/*"
       ],
@@ -17,8 +26,8 @@
   
     "content_scripts": [
       {
-        "matches": ["*://*.mozilla.org/*"],
-        "js": ["privacyBrowser.js"]
+        "matches": ["*://*/*"],
+        "js": ["main.js"]
       }
     ]
   

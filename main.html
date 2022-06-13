@@ -2,12 +2,92 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <link rel="stylesheet" href="main.css"/>
     </head>
-
+    
     <body>
 
-    <script src="src/cookies.js"></script>
+        <div>
+            <div>
+                <h1 id="website-security-status">Website Is Secure</h1>
+                <h2 id="website-score"></h2>
+                <progress id="score-progress-bar" value="0" max="400"></progress>
+                <br></br>
+            </div>
+
+            <div >
+                <h2 id="cookies-security-status">
+                    Cookies:
+                </h2>
+                <div id="header-title-cookies"></div>
+                <h3 id="number-cookies"></h3>
+                <div>
+                    <h3>Cookie Risk:</h3>
+                    <progress value="0" max="100" id="cookies-status"></progress>  
+                </div>
+                <h3>All cookies:</h3>
+                <ul id="cookie-list"></ul>
+                <br></br>
+            </div>
+    
+            <div> 
+                <h2 id="local-storage-security-status">
+                    Local Storage:
+                </h2>
+                <div id="header-title-local-storage"></div>
+                <h3 id="size-local-storage"></h3>
+                <div>
+                    <h3>Risk score of local storage:</h3>
+                    <progress value="0" max="50" id="local-storage-status"></progress>  
+                </div>
+                <h3>All data in local storage:</h3>
+                <ul id="local-storage-list"></ul>
+                <br></br>
+            </div>
+    
+            <div>
+                <h2 id="session-storage-security-status">
+                    Session Storage:
+                </h2>
+                <div id="header-title-session-storage"></div>
+                <h3 id="size-session-storage"></h3>
+                <div>
+                    <h3>Risk score of session storage:</h3>
+                    <progress value="0" max="20" id="session-storage-status"></progress>  
+                </div>
+                <h3>All data in session storage:</h3>
+                <ul id="session-storage-list"></ul>
+                <br></br>
+            </div>
+    
+            <div>
+                <h2 id="fingertprint-security-status">
+                    Fingerprinting:
+                </h2>
+                <h3 id="fingerprint-exists"></h3>
+                <div>
+                    <h3>Risk score of fingerprint:</h3>
+                    <progress value="0" max="100" id="fingerprint-status"></progress>  
+                </div>
+                <span id="fingerprint-id"></span>
+                <br></br>
+            </div>
+            
+            <div>
+                <h2>
+                    Third Party Domains:
+                </h2>
+                <h3 id="size-third-party"></h3>
+                <h2>All third party domains:</h2>
+                <ul id="third-party-list"></ul>
+            </div>
+        </div>
+
+    <script src="cookiesFinder.js"></script>
+    <script src="localStorageGetter.js"></script>
+    <script src="sessionStorageGetter.js"></script>
+    <script src="thirdParty.js"></script>
+    <script src="fingerprintGetter.js"></script>
+    <script src="score.js"></script>
  
     </body>
 

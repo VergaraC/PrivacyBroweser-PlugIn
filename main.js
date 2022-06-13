@@ -1,7 +1,7 @@
 const getAllExternalLinks = () => {
     var allExternalLinks = Array.prototype.map.call(
       document.querySelectorAll(
-        "link, img, video, audio,script, iframe, source, embed"
+        "link, img, video, audio, script, iframe, source, embed"
       ),
       (HTMLtag) => { 
         return HTMLtag.href || HTMLtag.src; 
