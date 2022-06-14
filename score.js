@@ -1,35 +1,35 @@
-const calculateScore = () => {
-    var websiteSecurity = document.getElementById('website-security-status');
-    var scoreTag = document.getElementById("website-score");
-    var cookiesData = document.getElementById('cookies-status').getAttribute('value');
-    var localStorageData = document.getElementById('local-storage-status').getAttribute('value');
-    var sessionStorageData = document.getElementById('session-storage-status').getAttribute('value');
-    var fingerprintData = document.getElementById('fingerprint-status').getAttribute('value');
+const sumScore = () => {
+    var webSec = document.getElementById('website-security-status');
+    var score = document.getElementById("website-score");
+    var cookies = document.getElementById('cookies-status').getAttribute('value');
+    var localStorage = document.getElementById('local-storage-status').getAttribute('value');
+    var sessionStorage = document.getElementById('session-storage-status').getAttribute('value');
+    var fingerprint = document.getElementById('fingerprint-status').getAttribute('value');
 
-    var cookiesScore = parseInt(cookiesData);
-    var localStorageScore = parseInt(localStorageData);
-    var sessionStorageScore = parseInt(sessionStorageData);
-    var fingerprintScore = parseInt(fingerprintData);
+    var cookiesScore = parseInt(cookies);
+    var lSScore = parseInt(localStorage);
+    var sSScore = parseInt(sessionStorage);
+    var fingerprintScore = parseInt(fingerprint);
   
-    var scoreProgressBar = document.getElementById('score-progress-bar');
+    var progBar = document.getElementById('score-progress-bar');
   
-    var score = cookiesScore + localStorageScore + sessionStorageScore + fingerprintScore;
-    scoreTag.innerHTML = "Website score: " + score;
+    var score = cookiesScore + lSScore + sSScore + fingerprintScore;
+    score.innerHTML = "Website score: " + score;
     
     if(score > 250){
-      websiteSecurity.innerHTML = "Website is Insecure";
-      websiteSecurity.style.color = "#F4364C";
-      scoreProgressBar.setAttribute("value", score);
+      webSec.innerHTML = "Website is Insecure";
+      webSec.style.color = "red";
+      progBar.setAttribute("value", score);
     }
     else if(score <= 250 && score > 150){
-      websiteSecurity.innerHTML = "Website is Sus";
-      websiteSecurity.style.color = "#FDB44E";
-      scoreProgressBar.setAttribute("value", score);
+      webSec.innerHTML = "Website is Sus";
+      webSec.style.color = "orange";
+      progBar.setAttribute("value", score);
     }
     else{
-      websiteSecurity.innerHTML = "Website is Secure";
-      websiteSecurity.style.color = "#90ee90";
-      scoreProgressBar.setAttribute("value", score);
+      webSec.innerHTML = "Website is Secure";
+      webSec.style.color = "green";
+      progBar.setAttribute("value", score);
     }
   }
   
@@ -39,6 +39,6 @@ const calculateScore = () => {
     });
   }
   
-  setTimeout(() => {
-    getActiveTab().then(calculateScore);
-  }, 100);
+  setTimeout(() => { //sem TimeOut n pega todos os dados
+    getActiveTab().then(sumScore);
+  }, 500);
