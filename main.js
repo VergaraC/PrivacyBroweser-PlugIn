@@ -37,7 +37,7 @@ fpPromise
   
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     switch (request.method) {
-        case "sessionStorageData": //mudar pra ifs e atualizar nomes
+        case "sessionStorageData":
             sendResponse({ 
                 data: Object.entries(sessionStorage) 
             });
