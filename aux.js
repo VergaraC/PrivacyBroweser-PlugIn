@@ -7,9 +7,9 @@ function getTab(){
 const getCookies = (tabs) => {
   let tab = tabs.pop();
   let nCookies = 0;
-  var getAllCookies = browser.cookies.getAll({url: tab.url});
+  var cookies = browser.cookies.getAll({url: tab.url});
 
-  getAllCookies.then((cookies) => {
+  cookies.then((cookies) => {
     var activeTabUrl = document.getElementById('header-title-cookies');
     var text = document.createTextNode("Cookies at: "+tab.title);
     var cookieList = document.getElementById('cookie-list');
@@ -17,9 +17,9 @@ const getCookies = (tabs) => {
     activeTabUrl.appendChild(text);
 
     if (cookies.length > 0) {
-      for (let cookie of cookies) {
+      for (let item of cookies){
         let li = document.createElement("li");
-        let content = document.createTextNode(cookie.name + ": "+ cookie.value);
+        let content = document.createTextNode(item.name + ": "+ item.value);
         li.appendChild(content);
         cookieList.appendChild(li);
         nCookies++;
@@ -32,7 +32,7 @@ const getCookies = (tabs) => {
 
     else {
       let p = document.createElement("p");
-      let content = document.createTextNode("No cookies in this tab.");
+      let content = document.createTextNode("Cookies aren't used in this tab.");
       let parent = cookieList.parentNode;
       p.appendChild(content);
       parent.appendChild(p);
@@ -57,75 +57,69 @@ const getCookies = (tabs) => {
 
 const getSessionStorage = async (tabs) => {
   let tab = tabs.pop();
-  var listHTML = document.getElementById('session-storage-list');
-  var sizeHTML = document.getElementById('size-session-storage');
-  let sessionStorageLength = 0;
+  var list = document.getElementById('session-storage-list');
+  var size = document.getElementById('size-session-storage');
+  let sSLength = 0;
   const response = await browser.tabs.sendMessage(tab.id, {method: "sessionStorageData"});
-  var websiteSecurity = document.getElementById('session-storage-security-status');
-  var sessionStorageSecurity = document.getElementById('session-storage-status');
+  var webSec = document.getElementById('session-storage-security-status');
+  var sSSec = document.getElementById('session-storage-status');
   
   if (response.data.length > 0) {
-    for (let sessionStorageItem of response.data) {
-      if (sessionStorageItem) {
-        sessionStorageLength++;
+    for (let item of response.data) {
+      if (item) {
+        sSLength++;
         let li = document.createElement("li");
-        let content = document.createTextNode(sessionStorageItem);
+        let content = document.createTextNode(item);
         li.appendChild(content);
-        listHTML.appendChild(li);
+        list.appendChild(li);
       }
     }
-    let sizeContent = document.createTextNode("Number of items on Session Storage: " + sessionStorageLength);
-    sizeHTML.appendChild(sizeContent);
+    let sizeContent = document.createTextNode("Items on Session Storage: " + sSLength);
+    size.appendChild(sizeContent);
     
-    if(sessionStorageLength > 20){
-      websiteSecurity.style.color = "#F4364C";
-      sessionStorageSecurity.setAttribute("value", "20");
+    if(sSLength > 20){
+      webSec.style.color = "#F4364C";
+      sSSec.setAttribute("value", "20");
     } 
-    else if (sessionStorageLength > 10 && sessionStorageLength < 20){
-    websiteSecurity.style.color = "#FDB44E";
-    sessionStorageSecurity.setAttribute("value", sessionStorageLength.toString());
+    else if (sSLength > 10 && sSLength < 20){
+    webSec.style.color = "#FDB44E";
+    sSSec.setAttribute("value", sSLength.toString());
     } 
     else {
-      sessionStorageSecurity.setAttribute("value", sessionStorageLength.toString());
+      sSSec.setAttribute("value", sSLength.toString());
     }
   }
   
   else {
     let noSessionStorageTag = document.createElement("h4");
-    let noSessionStorageData = document.createTextNode("No session storage data in this tab.");
+    let noSessionStorageData = document.createTextNode("Session storage isn't used in this tab.");
     noSessionStorageTag.appendChild(noSessionStorageData);
-    listHTML.appendChild(noSessionStorageTag);
+    list.appendChild(noSessionStorageTag);
   }
-}
-
-function getTab() {
-  return browser.tabs.query({
-    currentWindow: true, active: true
-  });
 }
 
 const getLocalStorage = async (tabs) => {
   let length = 0;
   let tab = tabs.pop();
-  var localStorageList = document.getElementById('local-storage-list');
+  var lsList = document.getElementById('local-storage-list');
   var size = document.getElementById('size-local-storage');
   const response = await browser.tabs.sendMessage(tab.id, {method: "localStorageData"})
   var webSec = document.getElementById('website-security-status');
   var lStorageSec = document.getElementById('local-storage-status');
-  
+
   if (response.data.length > 0){
-    for (let localStorageItem of response.data){
-      if (localStorageItem){
+    for (let item of response.data){
+      if (item){
         let li = document.createElement("li");
-        let item = document.createTextNode(localStorageItem);
-        li.appendChild(item);
-        localStorageList.appendChild(li);
+        let item2 = document.createTextNode(item);
+        li.appendChild(item2);
+        lsList.appendChild(li);
         length++;
       }
     }
     let sizeLS = document.createTextNode("Items on Local Storage: " + length);
     size.appendChild(sizeLS);
-    
+
     if(length > 10){
       webSec.innerHTML = "Website uses a lot of local storage";
       webSec.style.color = "red";
@@ -134,13 +128,13 @@ const getLocalStorage = async (tabs) => {
     } else{
       lStorageSec.setAttribute("value", "100");
     }
-    
+
   }else {
     let noLSTag = document.createElement("h5");
     let noLSData = document.createTextNode("Local storage isn't used in this tab.");
-    
+
     noLSTag.appendChild(noLSData);
-    localStorageList.appendChild(noLSTag);
+    lsList.appendChild(noLSTag);
     lStorageSec.setAttribute("value", "100");
   }
 }
@@ -173,7 +167,7 @@ const getThirdParty = async (tabs) => {
   var links = response.data.links;
   var numberOfLinks = response.data.numberOfLinks;
   var sizeLinks = document.getElementById("size-third-party");
-  var sizeLinksText = document.createTextNode("Number of external links: "+ numberOfLinks);
+  var sizeLinksText = document.createTextNode("External links: "+ numberOfLinks);
   sizeLinks.appendChild(sizeLinksText);
 
   links.map(domain => {
