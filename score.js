@@ -14,10 +14,10 @@ const sumScore = () => {
     var progBar = document.getElementById('score-progress-bar');
   
     var score = cookiesScore + lSScore + sSScore + fingerprintScore;
-    score.innerHTML = "Website score: " + score;
+    score.innerHTML = "Overall score: " + score;
     
     if(score > 250){
-      webSec.innerHTML = "Website is Insecure";
+      webSec.innerHTML = "Website is Garbage :(";
       webSec.style.color = "red";
       progBar.setAttribute("value", score);
     }
@@ -27,7 +27,7 @@ const sumScore = () => {
       progBar.setAttribute("value", score);
     }
     else{
-      webSec.innerHTML = "Website is Secure";
+      webSec.innerHTML = "Website is Safe";
       webSec.style.color = "green";
       progBar.setAttribute("value", score);
     }
