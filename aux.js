@@ -6,16 +6,15 @@ function getTab(){
 
 const getCookies = (tabs) => {
   let tab = tabs.pop();
-  let countCookies = 0;
-  var gettingAllCookies = browser.cookies.getAll({
-    url: tab.url
-  });
+  let nCookies = 0;
 
-  gettingAllCookies.then((cookies) => {
+  var getAllCookies = browser.cookies.getAll({url: tab.url});
+
+  getAllCookies.then((cookies) => {
     var activeTabUrl = document.getElementById('header-title-cookies');
     var text = document.createTextNode("Cookies at: "+tab.title);
     var cookieList = document.getElementById('cookie-list');
-    var numberOfCookies = document.getElementById('number-cookies');
+    var cookiesLen = document.getElementById('number-cookies');
     activeTabUrl.appendChild(text);
 
     if (cookies.length > 0) {
@@ -24,32 +23,35 @@ const getCookies = (tabs) => {
         let content = document.createTextNode(cookie.name + ": "+ cookie.value);
         li.appendChild(content);
         cookieList.appendChild(li);
-        countCookies++;
+        nCookies++;
       }
       let cookiesText = document.createElement("p");
-      let cookiesContent = document.createTextNode("Number of cookies: "+countCookies);
+      let cookiesContent = document.createTextNode("Number of cookies: "+nCookies);
       cookiesText.appendChild(cookiesContent);
-      numberOfCookies.appendChild(cookiesText);
-    } else {
+      cookiesLen.appendChild(cookiesText);
+    }
+
+    else {
       let p = document.createElement("p");
       let content = document.createTextNode("No cookies in this tab.");
       let parent = cookieList.parentNode;
-
       p.appendChild(content);
       parent.appendChild(p);
     }
 
-    var websiteSecurity = document.getElementById('cookies-security-status');
-    var cookiesSecurity = document.getElementById('cookies-status');
+    var siteSec = document.getElementById('cookies-security-status');
+    var cookiesSec = document.getElementById('cookies-status');
     
-    if(countCookies >= 200){
-      websiteSecurity.style.color = "#F4364C";
-      cookiesSecurity.setAttribute("value", "100");
-    } else if(countCookies > 100 && countCookies < 200){
-      websiteSecurity.style.color = "#FDB44E";
-      cookiesSecurity.setAttribute("value", countCookies.toString());
-    } else {
-      cookiesSecurity.setAttribute("value", countCookies.toString());
+    if(nCookies >= 200){
+      cookiesSec.setAttribute("value", "100");
+      siteSec.style.color = "#F4364C";
+    } 
+    else if(nCookies > 100 && nCookies < 200){
+      cookiesSec.setAttribute("value", nCookies.toString());
+      siteSec.style.color = "#FDB44E";
+    } 
+    else {
+      cookiesSec.setAttribute("value", nCookies.toString());
     }
   });
 }
@@ -60,9 +62,7 @@ const getSessionStorage = async (tabs) => {
   var sizeHTML = document.getElementById('size-session-storage');
   let sessionStorageLength = 0;
   
-  const response = await browser.tabs.sendMessage(tab.id, { 
-    method: "sessionStorageData" 
-  });
+  const response = await browser.tabs.sendMessage(tab.id, {method: "sessionStorageData"});
   
   var websiteSecurity = document.getElementById('session-storage-security-status');
   var sessionStorageSecurity = document.getElementById('session-storage-status');
@@ -83,13 +83,17 @@ const getSessionStorage = async (tabs) => {
     if(sessionStorageLength > 20){
       websiteSecurity.style.color = "#F4364C";
       sessionStorageSecurity.setAttribute("value", "20");
-    } else if (sessionStorageLength > 10 && sessionStorageLength < 20){
+    } 
+    else if (sessionStorageLength > 10 && sessionStorageLength < 20){
     websiteSecurity.style.color = "#FDB44E";
     sessionStorageSecurity.setAttribute("value", sessionStorageLength.toString());
-  } else {
-    sessionStorageSecurity.setAttribute("value", sessionStorageLength.toString());
+    }
+    else {
+      sessionStorageSecurity.setAttribute("value", sessionStorageLength.toString());
+    }
   }
-  } else {
+  
+  else {
     let noSessionStorageTag = document.createElement("h4");
     let noSessionStorageData = document.createTextNode("No session storage data in this tab.");
     
@@ -114,7 +118,7 @@ const getLocalStorage = async (tabs) => {
   const response = await browser.tabs.sendMessage(tab.id, {method: "localStorageData"})
   
   var webSec = document.getElementById('website-security-status');
-  var lStorageSec = document.getElementById('local-storage-status');
+  var localStorageSec = document.getElementById('local-storage-status');
   
   if (response.data.length > 0){
     for (let localStorageItem of response.data){
@@ -132,10 +136,10 @@ const getLocalStorage = async (tabs) => {
     if(length > 10){
       webSec.innerHTML = "Website uses a lot of local storage";
       webSec.style.color = "red";
-      lStorageSec.style.color = "red";
-      lStorageSec.setAttribute("value", "10");
+      localStorageSec.style.color = "red";
+      localStorageSec.setAttribute("value", "10");
     } else{
-      lStorageSec.setAttribute("value", "100");
+      localStorageSec.setAttribute("value", "100");
     }
     
   }else {
@@ -144,7 +148,7 @@ const getLocalStorage = async (tabs) => {
     
     noLSTag.appendChild(noLSData);
     localStorageList.appendChild(noLSTag);
-    lStorageSec.setAttribute("value", "100");
+    localStorageSec.setAttribute("value", "100");
   }
 }
 
@@ -175,16 +179,11 @@ const getFingerprint = async (tabs) => {
 const getThirdParty = async (tabs) => {
   let tab = tabs.pop();
   var thirdPartyList = document.getElementById('third-party-list');
-
-  const response = await browser.tabs.sendMessage(tab.id, {
-    method: "thirdPartyDomains"
-  });
-  
   var links = response.data.links;
   var numberOfLinks = response.data.numberOfLinks;
-
-  var sizeLinks = document.getElementById("size-third-party");
   var sizeLinksText = document.createTextNode("Number of external links: "+ numberOfLinks);
+  var sizeLinks = document.getElementById("size-third-party");
+  const response = await browser.tabs.sendMessage(tab.id, {method: "thirdPartyDomains"});
   sizeLinks.appendChild(sizeLinksText);
 
   links.map(domain => {
