@@ -7,7 +7,6 @@ function getTab(){
 const getCookies = (tabs) => {
   let tab = tabs.pop();
   let nCookies = 0;
-
   var getAllCookies = browser.cookies.getAll({url: tab.url});
 
   getAllCookies.then((cookies) => {
@@ -61,9 +60,7 @@ const getSessionStorage = async (tabs) => {
   var listHTML = document.getElementById('session-storage-list');
   var sizeHTML = document.getElementById('size-session-storage');
   let sessionStorageLength = 0;
-  
   const response = await browser.tabs.sendMessage(tab.id, {method: "sessionStorageData"});
-  
   var websiteSecurity = document.getElementById('session-storage-security-status');
   var sessionStorageSecurity = document.getElementById('session-storage-status');
   
@@ -96,7 +93,6 @@ const getSessionStorage = async (tabs) => {
   else {
     let noSessionStorageTag = document.createElement("h4");
     let noSessionStorageData = document.createTextNode("No session storage data in this tab.");
-    
     noSessionStorageTag.appendChild(noSessionStorageData);
     listHTML.appendChild(noSessionStorageTag);
   }
@@ -113,10 +109,7 @@ const getLocalStorage = async (tabs) => {
   let tab = tabs.pop();
   var localStorageList = document.getElementById('local-storage-list');
   var size = document.getElementById('size-local-storage');
-  
-  
   const response = await browser.tabs.sendMessage(tab.id, {method: "localStorageData"})
-  
   var webSec = document.getElementById('website-security-status');
   var lStorageSec = document.getElementById('local-storage-status');
   
@@ -154,14 +147,11 @@ const getLocalStorage = async (tabs) => {
 
 const getFingerprint = async (tabs) => {
   let tab = tabs.pop();
-  const response = await browser.tabs.sendMessage(tab.id, {
-      method: "fingerprintData"
-    });
+  const response = await browser.tabs.sendMessage(tab.id, {method: "fingerprintData"});
   var Exists = document.getElementById('fingerprint-exists');
   var Id = document.getElementById('fingerprint-id');
   var webSec = document.getElementById('fingertprint-security-status');
   var fingerprintSec = document.getElementById('fingerprint-status');
-
   var fingerprint = response.data;
 
   if (fingerprint){
@@ -179,14 +169,9 @@ const getFingerprint = async (tabs) => {
 const getThirdParty = async (tabs) => {
   let tab = tabs.pop();
   var thirdPartyList = document.getElementById('third-party-list');
-
-  const response = await browser.tabs.sendMessage(tab.id, {
-    method: "thirdPartyDomains"
-  });
-  
+  const response = await browser.tabs.sendMessage(tab.id, {method: "thirdPartyDomains"});
   var links = response.data.links;
   var numberOfLinks = response.data.numberOfLinks;
-
   var sizeLinks = document.getElementById("size-third-party");
   var sizeLinksText = document.createTextNode("Number of external links: "+ numberOfLinks);
   sizeLinks.appendChild(sizeLinksText);
