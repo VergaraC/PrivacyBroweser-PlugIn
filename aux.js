@@ -87,7 +87,7 @@ const getSessionStorage = async (tabs) => {
     else if (sessionStorageLength > 10 && sessionStorageLength < 20){
     websiteSecurity.style.color = "#FDB44E";
     sessionStorageSecurity.setAttribute("value", sessionStorageLength.toString());
-    }
+    } 
     else {
       sessionStorageSecurity.setAttribute("value", sessionStorageLength.toString());
     }
@@ -118,7 +118,7 @@ const getLocalStorage = async (tabs) => {
   const response = await browser.tabs.sendMessage(tab.id, {method: "localStorageData"})
   
   var webSec = document.getElementById('website-security-status');
-  var localStorageSec = document.getElementById('local-storage-status');
+  var lStorageSec = document.getElementById('local-storage-status');
   
   if (response.data.length > 0){
     for (let localStorageItem of response.data){
@@ -136,10 +136,10 @@ const getLocalStorage = async (tabs) => {
     if(length > 10){
       webSec.innerHTML = "Website uses a lot of local storage";
       webSec.style.color = "red";
-      localStorageSec.style.color = "red";
-      localStorageSec.setAttribute("value", "10");
+      lStorageSec.style.color = "red";
+      lStorageSec.setAttribute("value", "10");
     } else{
-      localStorageSec.setAttribute("value", "100");
+      lStorageSec.setAttribute("value", "100");
     }
     
   }else {
@@ -148,7 +148,7 @@ const getLocalStorage = async (tabs) => {
     
     noLSTag.appendChild(noLSData);
     localStorageList.appendChild(noLSTag);
-    localStorageSec.setAttribute("value", "100");
+    lStorageSec.setAttribute("value", "100");
   }
 }
 
@@ -179,11 +179,16 @@ const getFingerprint = async (tabs) => {
 const getThirdParty = async (tabs) => {
   let tab = tabs.pop();
   var thirdPartyList = document.getElementById('third-party-list');
+
+  const response = await browser.tabs.sendMessage(tab.id, {
+    method: "thirdPartyDomains"
+  });
+  
   var links = response.data.links;
   var numberOfLinks = response.data.numberOfLinks;
-  var sizeLinksText = document.createTextNode("Number of external links: "+ numberOfLinks);
+
   var sizeLinks = document.getElementById("size-third-party");
-  const response = await browser.tabs.sendMessage(tab.id, {method: "thirdPartyDomains"});
+  var sizeLinksText = document.createTextNode("Number of external links: "+ numberOfLinks);
   sizeLinks.appendChild(sizeLinksText);
 
   links.map(domain => {
